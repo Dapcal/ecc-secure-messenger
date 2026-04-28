@@ -1,0 +1,8 @@
+# Bases de données
+*.db
+novashield.db
+novashield_vault.db
+
+# Node.js
+node_modules/
+npm-debug.log

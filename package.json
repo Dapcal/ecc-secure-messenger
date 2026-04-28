@@ -1,0 +1,12 @@
+{
+  "name": "novashield-sms-secure",
+  "version": "1.0.0",
+  "description": "Messagerie sécurisée utilisant X25519 et AES-GCM",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.6"
+  }
+}

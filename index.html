@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Messagerie X25519 + AES-GCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🛡️ X25519 + AES-GCM</h1>
+            <div id="auth-status" class="status-bar" style="display: none;">
+                <span id="active-user-name" style="font-weight: bold; color: #fff;"></span>
+                <button onclick="logout()" class="btn-sm">Déconnexion</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="auth-view" class="card">
+            <div class="tabs-auth">
+                <button id="tab-login-btn" class="auth-tab-btn active" onclick="setAuthMode('login')">Connexion</button>
+                <button id="tab-register-btn" class="auth-tab-btn" onclick="setAuthMode('register')">Inscription</button>
+            </div>
+            <div class="form-group">
+                <label>Utilisateur</label>
+                <input type="text" id="username" placeholder="Pseudo">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="password" placeholder="Mot de passe">
+            </div>
+            <button onclick="handleAuth()" class="btn-primary">Accéder aux outils</button>
+        </section>
+
+        <main id="main-view" style="display: none;">
+            <div class="main-tabs">
+                <button class="tab-link active" onclick="switchTab(event, 'encrypt-tab')">Chiffrer</button>
+                <button class="tab-link" onclick="switchTab(event, 'decrypt-tab')">Déchiffrer</button>
+                <button class="tab-link" onclick="switchTab(event, 'settings-tab')">Mon Identité</button>
+            </div>
+
+            <div class="card" style="border-radius: 0 0 20px 20px;">
+                <div id="encrypt-tab" class="tab-pane active">
+                    <div class="form-group">
+                        <label>Destinataire :</label>
+                        <input type="text" id="dest-username" placeholder="Nom de l'utilisateur dans la BD">
+                    </div>
+                    <div class="form-group">
+                        <label>Message secret :</label>
+                        <textarea id="plain-msg" placeholder="Saisissez votre message..."></textarea>
+                    </div>
+                    <button onclick="encryptOnly()" class="btn-primary">Chiffrer le message</button>
+                    <div class="result-box">
+                        <label>Cryptogramme :</label>
+                        <textarea id="cipher-output" readonly placeholder="Résultat..."></textarea>
+                        <button onclick="copyToClipboard('cipher-output')" class="btn-secondary" style="width:100%; margin-top:10px;">Copier le résultat</button>
+                    </div>
+                </div>
+
+                <div id="decrypt-tab" class="tab-pane" style="display:none;">
+                    <div class="form-group">
+                        <label>Expéditeur :</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="sender-username" placeholder="Pseudo de l'expéditeur">
+                            <button onclick="startScanner()" class="btn-sm" style="background: var(--secondary); border:none; color:white; cursor:pointer; border-radius:8px; padding:0 15px;">📷 Scanner QR</button>
+                        </div>
+                    </div>
+                    <div id="qr-reader" style="width: 100%; display: none; margin-bottom: 15px; border-radius: 12px; overflow: hidden;"></div>
+                    
+                    <div class="form-group">
+                        <label>Coller le cryptogramme :</label>
+                        <textarea id="cipher-input" placeholder="Collez le texte chiffré ici..."></textarea>
+                    </div>
+                    <button onclick="decryptMessage()" class="btn-primary">Déchiffrer</button>
+                    <div class="result-box">
+                        <label>Message déchiffré :</label>
+                        <div id="decrypted-msg" class="output-display">---</div>
+                    </div>
+                </div>
+
+                <div id="settings-tab" class="tab-pane" style="display:none;">
+                    <h3>Ma Clé Publique Dynamique</h3>
+                    <div class="form-group">
+                        <textarea id="my-public-key-display" readonly style="font-size:0.7rem; height: 60px;"></textarea>
+                    </div>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <label style="display:block; margin-bottom:10px;">Mon QR Code d'identité :</label>
+                        <div id="qrcode-container" style="display: inline-block; padding: 15px; background: white; border-radius: 12px; border: 1px solid #e2e8f0;"></div>
+                    </div>
+                    <button onclick="revokeKeys()" class="btn-danger" style="width:100%">Générer une nouvelle identité</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/scripts/main.js"></script>
+</body>
+</html>
